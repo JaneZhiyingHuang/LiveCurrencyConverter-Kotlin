@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -20,6 +21,14 @@ import fi.oamk.livecurrency.viewmodel.CurrencyViewModel
 fun CurrencyScreen(viewModel: CurrencyViewModel, navController: NavController) {
     val exchangeRates by viewModel.exchangeRates.observeAsState(initial = emptyMap())
     val isLoading by viewModel.isLoading.observeAsState(initial = true)
+    val errorMessage by viewModel.errorMessage.observeAsState()
+
+    //to ErrorScreen if error found
+    errorMessage?.let { error ->
+        LaunchedEffect(error) {
+            navController.navigate("errorScreen/$error")
+        }
+    }
 
     Column(modifier = Modifier.padding(16.dp)) {
         TopAppBar(

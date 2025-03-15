@@ -8,9 +8,9 @@ import kotlinx.coroutines.launch
 
 class CurrencyViewModel : ViewModel() {
     private val api = CurrencyApi.create()
-//    val date = MutableLiveData<String>()
     val exchangeRates = MutableLiveData<Map<String, Double>>()
     val isLoading = MutableLiveData<Boolean>()
+    val errorMessage = MutableLiveData<String?>()
 
     // some currencies example
     private val currencies = listOf(
@@ -26,13 +26,14 @@ class CurrencyViewModel : ViewModel() {
     // get exchange rates
     private fun fetchExchangeRates() {
         isLoading.postValue(true)
+        errorMessage.postValue(null)
         viewModelScope.launch {
             try {
                 val response = api.getExchangeRates("2c35b9a5de28487daf5f8c93da9f5740")
                 val rates = response.rates.filter { it.key in currencies }
                 exchangeRates.postValue(rates)
             } catch (e: Exception) {
-                // return an error
+                errorMessage.postValue("Failed to load data: ${e.message}")
                 exchangeRates.postValue(emptyMap())
             } finally {
                 isLoading.postValue(false)

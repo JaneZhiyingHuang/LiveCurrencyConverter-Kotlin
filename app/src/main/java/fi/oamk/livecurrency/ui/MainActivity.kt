@@ -34,6 +34,10 @@ class MainActivity : ComponentActivity() {
                         composable("infoScreen") {
                             InfoScreen(navController)
                         }
+                        composable("errorScreen/{message}") { backStackEntry ->
+                            val message = backStackEntry.arguments?.getString("message") ?: "Unknown error"
+                            ErrorScreen(navController, message)
+                        }
                     }
                 }
             }
