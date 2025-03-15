@@ -12,8 +12,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import fi.oamk.livecurrency.ui.theme.EvenLighterGreen
 import fi.oamk.livecurrency.viewmodel.CurrencyViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,7 +34,7 @@ fun CurrencyScreen(viewModel: CurrencyViewModel, navController: NavController) {
 
     Column(modifier = Modifier.padding(16.dp)) {
         TopAppBar(
-            title = { Text(text = "Live EUR Exchange Rates") },
+            title = { Text(text = "Live USD Exchange Rates") },
             actions = {
                 IconButton(onClick = { navController.navigate("infoScreen") }) {
                     Icon(Icons.Default.Info, contentDescription = "Info")
@@ -48,15 +50,29 @@ fun CurrencyScreen(viewModel: CurrencyViewModel, navController: NavController) {
             LazyColumn {
                 items(exchangeRates.entries.toList()) { (currency, rate) ->
                     Card(
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = EvenLighterGreen
+                        )
                     ) {
                         Row(
                             modifier = Modifier.padding(16.dp),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Text(text = "1 EUR  =  ")
-                            Text(text = if (rate == -1.0) "Error" else "%.4f".format(rate))
-                            Text(text = " $currency")
+                            Text(
+                                text = "1 USD  =  ",
+                                color = Color.DarkGray
+                            )
+                            Text(
+                                text = if (rate == -1.0) "Error" else "%.4f".format(rate),
+                                color = Color.DarkGray
+                            )
+                            Text(
+                                text = " $currency",
+                                color = Color.DarkGray
+                            )
                         }
                     }
                 }

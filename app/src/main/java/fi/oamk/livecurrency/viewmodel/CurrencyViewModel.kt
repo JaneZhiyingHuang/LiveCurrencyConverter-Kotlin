@@ -14,7 +14,7 @@ class CurrencyViewModel : ViewModel() {
 
     // some currencies example
     private val currencies = listOf(
-        "USD", "GBP", "JPY", "CAD", "AUD", "CNY", "HKY",
+        "GBP", "JPY", "CAD", "AUD", "CNY", "HKY",
         "EUR", "CHF", "NZD", "INR", "MXN", "SGD", "BRL",
         "SEK", "NOK", "DKK", "ZAR", "KRW", "TRY", "RUB"
     )

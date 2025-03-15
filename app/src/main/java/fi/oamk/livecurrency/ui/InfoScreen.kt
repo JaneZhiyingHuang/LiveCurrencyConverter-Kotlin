@@ -25,7 +25,7 @@ fun InfoScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = """
-        This app provides real-time EUR currency exchange rates.
+        This app provides real-time USD currency exchange rates.
         App uses ExchangeRate API available on https://api.currencyfreaks.com/v2.0/
         Developed by Zhiying Huang
     """.trimIndent()
