@@ -23,7 +23,7 @@ fun CurrencyScreen(viewModel: CurrencyViewModel, navController: NavController) {
     val isLoading by viewModel.isLoading.observeAsState(initial = true)
     val errorMessage by viewModel.errorMessage.observeAsState()
 
-    //to ErrorScreen if error found
+    //navigate to ErrorScreen if error found
     errorMessage?.let { error ->
         LaunchedEffect(error) {
             navController.navigate("errorScreen/$error")
@@ -43,7 +43,7 @@ fun CurrencyScreen(viewModel: CurrencyViewModel, navController: NavController) {
         Spacer(modifier = Modifier.height(16.dp))
 
         if (isLoading) {
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+            LoadingScreen()
         } else {
             LazyColumn {
                 items(exchangeRates.entries.toList()) { (currency, rate) ->
