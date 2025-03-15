@@ -5,24 +5,22 @@ import retrofit2.http.Query
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-// API 响应数据类
-data class LiveCurrency(
-    val error: Int,
-    val error_message: String,
-    val amount: Double
+// API data
+data class CurrencyResponse(
+    val date: String,
+    val base: String,
+    val rates: Map<String, Double>
 )
 
-// API 接口
+//API interface
 interface CurrencyApi {
-    @GET("currency.php")
-    suspend fun getCurrency(
-        @Query("api_key") apiKey: String,
-        @Query("from") from: String,
-        @Query("to") to: String
-    ): LiveCurrency
+    @GET("rates/latest")
+    suspend fun getExchangeRates(
+        @Query("apikey") apiKey: String
+    ): CurrencyResponse
 
     companion object {
-        private const val BASE_URL = "https://www.amdoren.com/api/"
+        private const val BASE_URL = "https://api.currencyfreaks.com/v2.0/"
 
         fun create(): CurrencyApi {
             val retrofit = Retrofit.Builder()

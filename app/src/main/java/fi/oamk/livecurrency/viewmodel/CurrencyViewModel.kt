@@ -4,35 +4,40 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.MutableLiveData
 import fi.oamk.livecurrency.model.CurrencyApi
-import fi.oamk.livecurrency.model.LiveCurrency
+import fi.oamk.livecurrency.model.CurrencyResponse
 import kotlinx.coroutines.launch
 
 class CurrencyViewModel : ViewModel() {
     private val api = CurrencyApi.create()
-    val exchangeRates = MutableLiveData<Map<String, Double>>() // 存储 5 种汇率
+//    val date = MutableLiveData<String>()
+    val exchangeRates = MutableLiveData<Map<String, Double>>()
+    val isLoading = MutableLiveData<Boolean>()
 
-    // 目标货币列表
-    private val currencies = listOf("USD", "GBP", "JPY", "CAD", "AUD")
+    // some currencies example
+    private val currencies = listOf(
+        "USD", "GBP", "JPY", "CAD", "AUD", "CNY", "HKY",
+        "EUR", "CHF", "NZD", "INR", "MXN", "SGD", "BRL",
+        "SEK", "NOK", "DKK", "ZAR", "KRW", "TRY", "RUB"
+    )
 
     init {
         fetchExchangeRates()
     }
 
-    // 获取欧元兑 5 种货币的最新汇率
+    // 获取汇率数据
     private fun fetchExchangeRates() {
+        isLoading.postValue(true)
         viewModelScope.launch {
-            val rates = mutableMapOf<String, Double>()
-            for (currency in currencies) {
-                try {
-                    val response = api.getCurrency("wVan8DU7STKQcyrBz3iRQqryMhahkV", "EUR", currency)
-                    if (response.error == 0) {
-                        rates[currency] = response.amount
-                    }
-                } catch (e: Exception) {
-                    rates[currency] = -1.0 // 表示错误
-                }
+            try {
+                val response = api.getExchangeRates("2c35b9a5de28487daf5f8c93da9f5740")
+                val rates = response.rates.filter { it.key in currencies }
+                exchangeRates.postValue(rates)
+            } catch (e: Exception) {
+                // 出错时可以返回一个默认的错误标志
+                exchangeRates.postValue(emptyMap())
+            } finally {
+                isLoading.postValue(false)
             }
-            exchangeRates.postValue(rates)
         }
     }
 }
