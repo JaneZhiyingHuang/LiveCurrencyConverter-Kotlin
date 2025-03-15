@@ -2,29 +2,37 @@ package fi.oamk.livecurrency.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
 import androidx.lifecycle.MutableLiveData
-import fi.oamk.livecurrency.model.ApiService
-import fi.oamk.livecurrency.utils.Resource
-import fi.oamk.livecurrency.model.CurrencyResponse
+import fi.oamk.livecurrency.model.CurrencyApi
+import fi.oamk.livecurrency.model.LiveCurrency
+import kotlinx.coroutines.launch
 
 class CurrencyViewModel : ViewModel() {
+    private val api = CurrencyApi.create()
+    val exchangeRates = MutableLiveData<Map<String, Double>>() // 存储 5 种汇率
 
-    val exchangeResult = MutableLiveData<Resource<Double>>() // 结果状态 (成功/错误/加载中)
+    // 目标货币列表
+    private val currencies = listOf("USD", "GBP", "JPY", "CAD", "AUD")
 
-    fun convertCurrency(apiKey: String, from: String, to: String, amount: Double) {
-        exchangeResult.value = Resource.Loading() // 设置加载状态
+    init {
+        fetchExchangeRates()
+    }
+
+    // 获取欧元兑 5 种货币的最新汇率
+    private fun fetchExchangeRates() {
         viewModelScope.launch {
-            try {
-                val response = ApiService.api.convertCurrency(apiKey, from, to, amount)
-                if (response.error == 0) {
-                    exchangeResult.value = Resource.Success(response.amount) // 成功
-                } else {
-                    exchangeResult.value = Resource.Error(response.error_message) // 失败
+            val rates = mutableMapOf<String, Double>()
+            for (currency in currencies) {
+                try {
+                    val response = api.getCurrency("wVan8DU7STKQcyrBz3iRQqryMhahkV", "EUR", currency)
+                    if (response.error == 0) {
+                        rates[currency] = response.amount
+                    }
+                } catch (e: Exception) {
+                    rates[currency] = -1.0 // 表示错误
                 }
-            } catch (e: Exception) {
-                exchangeResult.value = Resource.Error("Network Error") // 网络错误
             }
+            exchangeRates.postValue(rates)
         }
     }
 }

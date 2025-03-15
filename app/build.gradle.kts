@@ -40,6 +40,13 @@ android {
 }
 
 dependencies {
+//    implementation("androidx.compose.ui:ui:1.4.0")
+//    implementation("androidx.compose.material3:material3:1.0.0")
+//    implementation("androidx.compose.runtime:runtime:1.4.0")
+//    implementation("androidx.lifecycle:lifecycle-livedata-compose:2.6.0")
+//    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+//    implementation("com.squareup.retrofit2:converter-gson:2.0.0")
+//    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.0.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
@@ -52,6 +59,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.runtime.livedata)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
